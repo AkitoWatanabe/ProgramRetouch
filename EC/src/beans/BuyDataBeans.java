@@ -14,13 +14,21 @@ public class BuyDataBeans  implements Serializable {
 	private int id;
 	private int userId;
 	private int totalPrice;
-	private int delivertMethodId;
+	private int deliveryMethodId;
 	private Date buyDate;
 
 	private String deliveryMethodName;
 	private int deliveryMethodPrice;
 
+	public BuyDataBeans() {
 
+	}
+	public BuyDataBeans(int id, int totalPrice, String delibaryMethodName, Date buyDate) {
+		this.id = id;
+		this.totalPrice = totalPrice;
+		this.deliveryMethodName = delibaryMethodName;
+		this.buyDate = buyDate;
+	}
 	public int getId() {
 		return id;
 	}
@@ -41,11 +49,11 @@ public class BuyDataBeans  implements Serializable {
 	}
 
 
-	public int getDelivertMethodId() {
-		return delivertMethodId;
+	public int getDeliveryMethodId() {
+		return deliveryMethodId;
 	}
-	public void setDelivertMethodId(int delivertMethodId) {
-		this.delivertMethodId = delivertMethodId;
+	public void setDeliveryMethodId(int deliveryMethodId) {
+		this.deliveryMethodId = deliveryMethodId;
 	}
 	public Date getBuyDate() {
 		return buyDate;

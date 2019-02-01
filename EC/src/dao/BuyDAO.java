@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import base.DBManager;
 import beans.BuyDataBeans;
@@ -34,7 +36,7 @@ public class BuyDAO {
 					Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, bdb.getUserId());
 			st.setInt(2, bdb.getTotalPrice());
-			st.setInt(3, bdb.getDelivertMethodId());
+			st.setInt(3, bdb.getDeliveryMethodId());
 			st.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 			st.executeUpdate();
 
@@ -83,7 +85,7 @@ public class BuyDAO {
 				bdb.setId(rs.getInt("id"));
 				bdb.setTotalPrice(rs.getInt("total_price"));
 				bdb.setBuyDate(rs.getTimestamp("create_date"));
-				bdb.setDelivertMethodId(rs.getInt("delivery_method_id"));
+				bdb.setDeliveryMethodId(rs.getInt("delivery_method_id"));
 				bdb.setUserId(rs.getInt("user_id"));
 				bdb.setDeliveryMethodPrice(rs.getInt("price"));
 				bdb.setDeliveryMethodName(rs.getString("name"));
@@ -92,6 +94,55 @@ public class BuyDAO {
 			System.out.println("searching BuyDataBeans by buyID has been completed");
 
 			return bdb;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new SQLException(e);
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+	}
+	/**
+	 * ユーザIDによる購入情報一覧（降順）
+	 * @param userId
+	 * @return BuyDataBeans
+	 * 				購入情報のデータを持つJavaBeansのリスト
+	 * @throws SQLException
+	 * 				呼び出し元にスローさせるため
+	 */
+	public List<BuyDataBeans> getBuyDataBeansByUserId(int userId) throws SQLException {
+		Connection con = null;
+		List<BuyDataBeans> userBuyHistory = new ArrayList<BuyDataBeans>();
+		try {
+			con = DBManager.getConnection();
+			String sql = "SELECT *"
+					+" FROM t_buy INNER JOIN m_delivery_method"
+					+ " ON t_buy.delivery_method_id = m_delivery_method.id"
+					+ " WHERE user_id = ?"
+					+ " ORDER BY create_date DESC";
+
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, userId);
+			System.out.println(st);
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				int totalPrice = rs.getInt("total_price");
+				Timestamp buyDate = rs.getTimestamp("create_date");
+				int id = rs.getInt("id");
+				String delibaryMethodName = rs.getString("name");
+				//時刻のフォーマット：未実装
+				BuyDataBeans bdb = new BuyDataBeans(id,totalPrice,delibaryMethodName,buyDate);
+
+				System.out.println(bdb);
+				userBuyHistory.add(bdb);
+			}
+
+			System.out.println("searching BuyDataBeans by userID has been completed");
+
+			return userBuyHistory;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new SQLException(e);
