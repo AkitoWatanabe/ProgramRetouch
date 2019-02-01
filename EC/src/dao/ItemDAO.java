@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import base.DBManager;
 import beans.ItemDataBeans;
@@ -169,6 +170,50 @@ public class ItemDAO {
 			}
 			return coung;
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new SQLException(e);
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+	}
+	/**
+	 * 購入IDによる購入商品一覧検索
+	 * @param buyId
+	 * @return ItemDataBeans
+	 * 				購入情報のデータを持つJavaBeansのリスト
+	 * @throws SQLException
+	 * 				呼び出し元にスローさせるため
+	 */
+	public List<ItemDataBeans> getItemDataBeansByBuyId(int buyId) throws SQLException {
+		Connection con = null;
+		List<ItemDataBeans> userBuyHistory = new ArrayList<ItemDataBeans>();
+		try {
+			con = DBManager.getConnection();
+			String sql = "SELECT *"
+					+" FROM t_buy_detail as bd"
+					+" JOIN m_item as i"
+					+" ON bd.item_id = i.id"
+					+" WHERE bd.buy_id = ?";
+
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, buyId);
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				int price = rs.getInt("price");
+				String itemName = rs.getString("name");
+				ItemDataBeans idb = new ItemDataBeans(price,itemName);
+
+				userBuyHistory.add(idb);
+			}
+
+			System.out.println("searching BuyDataBeans by userID has been completed");
+
+			return userBuyHistory;
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new SQLException(e);
 		} finally {

@@ -1,6 +1,8 @@
 package beans;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,6 +18,7 @@ public class BuyDataBeans  implements Serializable {
 	private int totalPrice;
 	private int deliveryMethodId;
 	private Date buyDate;
+	private String time;
 
 	private String deliveryMethodName;
 	private int deliveryMethodPrice;
@@ -23,10 +26,13 @@ public class BuyDataBeans  implements Serializable {
 	public BuyDataBeans() {
 
 	}
-	public BuyDataBeans(int id, int totalPrice, String delibaryMethodName, Date buyDate) {
+	public BuyDataBeans(int id, int totalPrice, String delibaryMethodName, String time) {
 		this.id = id;
 		this.totalPrice = totalPrice;
 		this.deliveryMethodName = delibaryMethodName;
+		this.setTime(time);
+	}
+	public BuyDataBeans(Timestamp buyDate) {
 		this.buyDate = buyDate;
 	}
 	public int getId() {
@@ -69,7 +75,7 @@ public class BuyDataBeans  implements Serializable {
 	}
 
 	public String getFormatDate() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH時mm分");
+		DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH時mm分");
 		return sdf.format(buyDate);
 	}
 	public int getDeliveryMethodPrice() {
@@ -77,6 +83,12 @@ public class BuyDataBeans  implements Serializable {
 	}
 	public void setDeliveryMethodPrice(int deliveryMethodPrice) {
 		this.deliveryMethodPrice = deliveryMethodPrice;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 

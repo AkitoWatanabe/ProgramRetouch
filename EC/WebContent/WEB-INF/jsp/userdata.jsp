@@ -64,8 +64,20 @@
 							<tbody>
 								<c:forEach var="bdb" items="${userBuyHistory}" >
 									<tr>
-										<td class="center"><a href="UserBuyHistoryDetail?buy_id=${bdb.id}" class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
-										<td class="center">${bdb.buyDate}</td>
+										<td class="center">
+											<form action="UserBuyHistoryDetail?buy_id=${bdb.id}"method="post">
+												<input type="hidden" name="buyDate" value=${bdb.time}>
+												<input type="hidden" name="deliveryMethodName" value=${bdb.deliveryMethodName}>
+												<input type="hidden" name="totalPrice" value=${bdb.totalPrice}>
+												<input type="hidden" name="buyId" value=${bdb.id}>
+												<div class="btn-floating btn waves-effect waves-light ">
+												<i class="material-icons">
+												<input type="submit" value=details>
+												</i>
+												</div>
+											</form>
+										</td>
+										<td class="center">${bdb.time}</td>
 										<td class="center">${bdb.deliveryMethodName}</td>
 										<td class="center">${bdb.totalPrice}円</td>
 									</tr>

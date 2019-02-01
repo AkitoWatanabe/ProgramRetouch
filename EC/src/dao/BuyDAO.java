@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +105,7 @@ public class BuyDAO {
 			}
 		}
 	}
+
 	/**
 	 * ユーザIDによる購入情報一覧（降順）
 	 * @param userId
@@ -131,10 +134,15 @@ public class BuyDAO {
 			while (rs.next()) {
 				int totalPrice = rs.getInt("total_price");
 				Timestamp buyDate = rs.getTimestamp("create_date");
+				DateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH時mm分");
+				String time =sdf.format(buyDate);
+				//BuyDataBeans temp = new BuyDataBeans();
+				//temp.getFormatDate();
+				//System.out.println(sdf.format(buyDate));
+				//BuyDataBeans temp = new BuyDataBeans(buyDate);
 				int id = rs.getInt("id");
 				String delibaryMethodName = rs.getString("name");
-				//時刻のフォーマット：未実装
-				BuyDataBeans bdb = new BuyDataBeans(id,totalPrice,delibaryMethodName,buyDate);
+				BuyDataBeans bdb = new BuyDataBeans(id,totalPrice,delibaryMethodName,time);
 
 				System.out.println(bdb);
 				userBuyHistory.add(bdb);
